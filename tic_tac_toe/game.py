@@ -15,26 +15,20 @@ class Game:
         print(self.board[:9])
     
     def check_win(self):
-        if self.board[0] == self.board[1] == self.board[2] != 0:
-            return self.board[1]
-        elif self.board[3] == self.board[4] == self.board[5] != 0:
+        for j in range(3):
+            i = 3 * j
+            if self.board[j] == self.board[j + 3] == self.board[j + 6] != 0:  # columns
+                return self.board[j]
+            elif self.board[i] == self.board[i + 1] == self.board[i + 2] != 0:  # rows
+                return self.board[i]
+
+        if self.board[0] == self.board[4] == self.board[8] != 0:  # diagonal
             return self.board[4]
-        elif self.board[6] == self.board[7] == self.board[8] != 0:
-            return self.board[7]
-        elif self.board[0] == self.board[3] == self.board[6] != 0:
-            return self.board[0]
-        elif self.board[1] == self.board[4] == self.board[7] != 0:
-            return self.board[1]
-        elif self.board[2] == self.board[5] == self.board[8] != 0:
-            return self.board[2]
-        elif self.board[1] == self.board[2] == self.board[3] != 0:
-            return self.board[1]
-        elif self.board[0] == self.board[4] == self.board[8] != 0:
-            return self.board[0]
-        elif self.board[2] == self.board[4] == self.board[6] != 0:
-            return self.board[2]
+        elif self.board[2] == self.board[4] == self.board[6] != 0:  # anti-diagonal
+            return self.board[4]
         elif 0 not in self.board:
-            return "tie"
+            return 'Tie'
+        
         return None
     
     def valid_move(self, move):
@@ -57,7 +51,9 @@ class Game:
     
     def run(self, log=False):
         self.log = log
-        while self.check_win() == None:
+        self.win = self.check_win()
+        while self.win == None:
             self.make_move()
-            self.check_win()
+            self.win = self.check_win()
+
      
