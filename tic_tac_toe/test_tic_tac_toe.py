@@ -6,7 +6,7 @@ player2 = randomPlayer()
 outcomes = {'tie': 0, 1: 0, 2: 0}
 for i in range(10000):
     game = Game(player2, player1)
-    game.run(log=False)
+    game.run(log=True)
     # print(game.winner)
     outcomes[game.win] += 1
     if i % 1000 == 0:

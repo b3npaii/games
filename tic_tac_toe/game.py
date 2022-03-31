@@ -11,8 +11,8 @@ class Game:
     
     def print_board(self):
         print(self.board[:3])
-        print(self.board[:6])
-        print(self.board[:9])
+        print(self.board[3:6])
+        print(self.board[6:9])
     
     def check_win(self):
         for j in range(3):
