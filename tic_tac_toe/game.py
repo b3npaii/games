@@ -45,7 +45,7 @@ class Game:
         if self.log == True:
             print()
             self.print_board()
-            print('Move was', move if self.valid_move(move) is True else f'invalid: {move}', ', made by', self.next)
+            print('Move was', move, 'made by', self.next)
             print()
         self.next = [2, 1][self.next - 1]
     
