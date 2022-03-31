@@ -7,8 +7,12 @@ class Game:
         for i in range(0, 9):
             self.board.append(0)
         self.next = 1
+        
     
-    def print_board
+    def print_board(self):
+        print(self.board[:3])
+        print(self.board[:6])
+        print(self.board[:9])
     
     def check_win(self):
         if self.board[0] == self.board[1] == self.board[2] != 0:
@@ -45,9 +49,15 @@ class Game:
         if self.valid_move(move) == True:
             self.board[move] = self.next
         if self.log == True:
-
+            print()
+            self.print_board()
+            print('Move was', move if self.valid_move(move) is True else f'invalid: {move}', ', made by', self.next)
+            print()
+        self.next = [2, 1][self.next - 1]
     
-    #def run(self, log=False):
-        #self.log = log
-
+    def run(self, log=False):
+        self.log = log
+        while self.check_win() == None:
+            self.make_move()
+            self.check_win()
      
