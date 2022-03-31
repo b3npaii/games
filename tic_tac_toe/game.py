@@ -32,10 +32,10 @@ class Game:
         return None
     
     def valid_move(self, move):
-        if self.board[move] != 0:
-            return False
-        else:
+        if self.board[move] == 0:
             return True
+        else:
+            return False
     
     def make_move(self):
         current_player = self.players[self.next - 1]
@@ -55,5 +55,3 @@ class Game:
         while self.win == None:
             self.make_move()
             self.win = self.check_win()
-
-     
