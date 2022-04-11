@@ -4,8 +4,14 @@ class strat1:
 
     def select_move(self, board):
         move = 0
-        if sum(board) == 0:
+        if board[2] == board[6] != 0 and board[4] == 0:
             move = 4
+        elif board[4] == board[6] != 0 and board[2] == 0:
+            move = 2
+        elif board[4] == board[8] != 0 and board[0] == 0:
+            move = 0
+        elif board[2] == board[4] != 0 and board[6] == 0:
+            move = 6
         elif board[0] == board[1] != 0 and board[2] == 0:
             move = 2
         elif board[0] == board[2] != 0 and board[1] == 0:
@@ -46,26 +52,14 @@ class strat1:
             move = 8
         elif board[0] == board[8] != 0 and board[4] == 0:
             move = 4
-        elif board[4] == board[8] != 0 and board[0] == 0:
-            move = 0
-        elif board[2] == board[4] != 0 and board[6] == 0:
-            move = 6
-        elif board[2] == board[6] != 0 and board[4] == 0:
-            move = 4
-        elif board[4] == board[6] != 0 and board[2] == 0:
-            move = 2
         elif board[4] == 0:
             move = 4
-        elif board[2] == 0:
-            move = 2
-        elif board[6] == 0:
-            move = 6
         elif board[0] == 0:
             move = 0
         elif board[8] == 0:
             move = 8
-        else:
-            move = randrange(0, 9)
-            while board[move] != 0:
-                move = randrange(0, 9)
+        elif board[2] == 0:
+            move = 2
+        elif board[6] == 0:
+            move = 6
         return move
