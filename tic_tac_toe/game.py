@@ -39,7 +39,7 @@ class Game:
     
     def make_move(self):
         current_player = self.players[self.next - 1]
-        move = current_player.select_move(self.board)
+        move = current_player.choose_move(self.board)
         if self.valid_move(move) == True:
             self.board[move] = self.next
         if self.log == True:

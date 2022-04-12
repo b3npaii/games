@@ -1,6 +1,9 @@
 from game import Game
 from random_player import randomPlayer
 from strategy1 import strat1
+from elias import Player
+from elias import strategy
+
 """
 player1 = strat1()
 player2 = randomPlayer()
@@ -13,15 +16,15 @@ for i in range(100000):
         print(i)
 print(outcomes)
 """
-custom_player = strat1()
-random_player = randomPlayer()
+me = strat1()
+elias = Player(strategy)
 outcomes = {'Tie': 0, 'custom': 0, 'random': 0}
 for i in range(100000):
     if i % 2 == 0:
-        game = Game(custom_player, random_player)
+        game = Game(me, elias)
         player_order = {'Tie': 'Tie', 1: 'custom', 2: 'random'}
     else:
-        game = Game(random_player, custom_player)
+        game = Game(me, elias)
         player_order = {'Tie': 'Tie', 1: 'random', 2: 'custom'}
 
     game.run()
