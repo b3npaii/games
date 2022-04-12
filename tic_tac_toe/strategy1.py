@@ -2,7 +2,7 @@ from random import randrange
 
 class strat1:
 
-    def select_move(self, board):
+    def choose_move(self, board):
         move = 0
         if board[2] == board[6] != 0 and board[4] == 0:
             move = 4
