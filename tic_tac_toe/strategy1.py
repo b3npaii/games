@@ -50,7 +50,7 @@ def strat1(board):
             move = 8
         elif board[0] == board[8] != 0 and board[4] == 0:
             move = 4
-        elif sum(board) == 0:
+        elif board[4] == 0:
             move = 4
         elif board[0] == 0:
             move = 0
