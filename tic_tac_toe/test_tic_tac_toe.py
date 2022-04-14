@@ -3,22 +3,10 @@ from player import Player
 from player import random_strat
 from strategy1 import strat1
 from elias import strategy
-from jeff import custom
+from jeff import jeff
 
-"""
-player1 = strat1()
-player2 = randomPlayer()
-outcomes = {'Tie': 0, 1: 0, 2: 0}
-for i in range(100000):
-    game = Game(player1, player2)
-    game.run(log=False)
-    outcomes[game.win] += 1
-    if i % 1000 == 0:
-        print(i)
-print(outcomes)
-"""
-Player1 = Player(random_strat)
-Player2 = Player(strat1)
+Player1 = Player(strat1)
+Player2 = Player(jeff)
 outcomes = {'Tie': 0, 'custom': 0, 'random': 0}
 for i in range(100000):
     if i % 2 == 0:
