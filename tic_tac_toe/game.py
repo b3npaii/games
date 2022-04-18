@@ -40,6 +40,9 @@ class Game:
     def make_move(self):
         current_player = self.players[self.next - 1]
         move = current_player.choose_move(self.board)
+        if type(move) is tuple:
+            move = list(move)
+            move = move[0] * 3 + move[1]
         if self.valid_move(move) == True:
             self.board[move] = self.next
         if self.log == True:

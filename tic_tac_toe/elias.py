@@ -1,7 +1,13 @@
 import random
 
 
-def strategy(board):
+def elias(board):
+
+    player_number = 2
+
+    if board == [0 for _ in range(9)]:
+        player_number = 1
+    
 
     for j in range(3):
         i = 3 * j
@@ -31,27 +37,33 @@ def strategy(board):
     elif board[4] == board[6] != 0 and board[2] == 0:
         return 2
 
-    if board == [0 for _ in range(9)]:
-        return 4
-    elif board[4] == 0:
-        return 4
-    elif board[0] == 0:
-        return 0
-    elif board[2] == 0:
-        return 2
-    elif board[6] == 0:
-        return 6
-    elif board[8] == 0:
-        return 8
-    elif board[1] == 0:
-        return 1
-    elif board[5] == 0:
-        return 5
+    if player_number == 1:
 
-    # elif board[4] == board[0]:
-    #     return 6
-    # elif board[4] == board[2]:
-    #     return 0
+        if board == [0 for _ in range(9)]:
+            return 4
+        if board[0] == 0:
+            return 0
+        elif board[2] == 0:
+            return 2
+        elif board[6] == 0:
+            return 6
+        elif board[8] == 0:
+            return 8
+
+    if player_number == 2:
+
+        if board[4] == 0:
+            return 4
+        elif board[1] == 0:
+            return 1
+        elif board[3] == 0:
+            return 3
+        elif board[5] == 0:
+            return 5
+        elif board[7] == 0:
+            return 7
+
+
 
     random_move = random.randrange(0, 9)
     while board[random_move] != 0:

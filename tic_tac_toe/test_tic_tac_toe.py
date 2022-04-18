@@ -2,19 +2,18 @@ from game import Game
 from player import Player
 from player import random_strat
 from strategy1 import strat1
-from elias import strategy
+from elias import elias
 from jeff import jeff
+from celeste import celeste
+from christine import christine
 
-Player1 = Player(strat1)
-Player2 = Player(jeff)
-outcomes = {'Tie': 0, 'custom': 0, 'random': 0}
-for i in range(100000):
-    if i % 2 == 0:
-        game = Game(Player1, Player2)
-        player_order = {'Tie': 'Tie', 1: 'custom', 2: 'random'}
-    else:
-        game = Game(Player1, Player2)
-        player_order = {'Tie': 'Tie', 1: 'random', 2: 'custom'}
+Player1 = Player(jeff)
+Player2 = Player(christine)
+
+outcomes = {'Tie': 0, 'Player1': 0, 'Player2': 0}
+for i in range(100):
+    game = Game(Player1, Player2)
+    player_order = {'Tie': 'Tie', 1: 'Player1', 2: 'Player2'}
 
     game.run()
     outcomes[player_order[game.win]] += 1
