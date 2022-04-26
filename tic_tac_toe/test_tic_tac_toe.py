@@ -7,12 +7,12 @@ from jeff import jeff
 from celeste import celeste
 from christine import christine
 
-Player1 = Player(jeff)
-Player2 = Player(christine)
+Player1 = Player(strat1)
+Player2 = Player(random_strat)
 
 outcomes = {'Tie': 0, 'Player1': 0, 'Player2': 0}
-for i in range(100):
-    game = Game(Player1, Player2)
+for i in range(10000):
+    game = Game(Player2, Player1)
     player_order = {'Tie': 'Tie', 1: 'Player1', 2: 'Player2'}
 
     game.run()
