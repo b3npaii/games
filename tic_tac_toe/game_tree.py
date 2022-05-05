@@ -39,6 +39,14 @@ class Node:
         elif 0 not in self.state:
             return 'Tie'
         return None
+    
+    def legal_moves(self):
+        legal = []
+        for i in range(0, 9):
+            if self.state[i] == 0:
+                legal.append(i)
+        return legal
+
 
 class TicTacToeTree:
     def __init__(self):
@@ -55,7 +63,7 @@ class TicTacToeTree:
 
             board = dequeued.state
             next_player = dequeued.turn
-            moves = self.legal_moves(board)
+            moves = dequeued.legal_moves()
             for move in moves:
                 new_board = list(board)
                 new_board[move] = next_player
@@ -64,12 +72,6 @@ class TicTacToeTree:
                 dequeued.children.append(new_node)
                 queue.enqueue(new_node)
 
-    def legal_moves(self, board):
-        legal = []
-        for i in range(0, 9):
-            if board[i] == 0:
-                legal.append(i)
-        return legal
 
 a = TicTacToeTree()
 leaf_node_count = 0

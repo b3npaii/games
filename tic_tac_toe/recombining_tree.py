@@ -39,3 +39,48 @@ class Node:
         elif 0 not in self.state:
             return 'Tie'
         return None
+    
+    def legal_moves(self):
+        legal = []
+        for i in range(0, 9):
+            if self.state[i] == 0:
+                legal.append(i)
+        return legal
+
+
+
+class RecombiningTree:
+    def __init__(self):
+        self.generate_tree()
+    
+    def generate_tree(self):
+        first = Node([0 for i in range(0, 9)])
+        queue = Queue([first])
+        self.root = first
+        seen = {tuple(first.state): first}
+
+        while queue.contents != []:
+            dequeued = queue.dequeue()
+            if dequeued.winner != None:
+                continue
+
+            board = dequeued.state
+            next_player = dequeued.turn
+            moves = dequeued.legal_moves()
+            for move in moves:
+                new_board = list(board)
+                new_board[move] = next_player
+
+                if tuple(new_board) in seen:
+                    new_node = seen[tuple(board)]
+                    dequeued.children.append(new_node)
+                else:
+                    new_node = Node(new_board)
+                    new_node.parent = dequeued
+                    dequeued.children.append(new_node)
+                    queue.enqueue(new_node)
+                    seen[tuple(new_node.state)] = new_node
+        print(len(seen))
+
+
+a = RecombiningTree()
