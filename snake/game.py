@@ -31,5 +31,19 @@ class game:
                     snake.append((i, j))
         return snake
     
+    def collide_with_self(self):
+        if len(list(set(self.snake))) != len(self.snake):
+            return True
+        elif self.snake[-1][0] != range(0, 10):
+            return True
+        elif self.snake[-1][1] != range(0, 10):
+            return True
+        return False
+    
+    def make_move(self):
+        return self.strat(self.board)
+    
+
+        
     
 
