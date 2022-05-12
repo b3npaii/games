@@ -19,7 +19,7 @@ class game:
         possible_places = []
         for i in range(0, 10):
             for j in range(0, 10):
-                if board[i][j] == ".":
+                if self.board[i][j] == ".":
                     possible_places.append((i, j))
         self.berry = possible_places[random.randint(0, len(possible_places) - 1)]
     
@@ -27,11 +27,11 @@ class game:
         snake = []
         for i in range(0, 10):
             for j in range(0, 10):
-                if self.board[i][j] == 0:
+                if self.board[i][j] == "O":
                     snake.append((i, j))
         return snake
     
-    def collide_with_self(self):
+    def check_collision(self):
         if len(list(set(self.snake))) != len(self.snake):
             return True
         elif self.snake[-1][0] != range(0, 10):
@@ -44,6 +44,33 @@ class game:
         return self.strat(self.board)
     
 
-        
+    def game(self):
+        self.generate_berry()
+        while True:
+            for i in range(0, 10):
+                for j in range(0, 10):
+                    self.board[i][j] = "."
+            self.board[self.berry[0]][self.berry[1]] = "b"
+            for part in self.snake:
+                self.board[part[0]][part[1]] = "O"
+            for row in self.board:
+                print(row)
+            move = self.make_move()
+            if move == 'w':
+                new_segment = (self.snake[-1][0] - 1, self.snake[-1][1])
+            elif move == 's':
+                new_segment = (self.snake[-1][0] + 1, self.snake[-1][1])
+            elif move == 'a':
+                new_segment = (self.snake[-1][0], self.snake[-1][1] - 1)
+            elif move == 'd':
+                new_segment = (self.snake[-1][0], self.snake[-1][1] + 1)
+            self.snake.append(new_segment)
+            if self.check_collision == True:
+                return self.score - 3
+            self.snake = self.snake[-self.score:]
+            if self.berry in self.snake:
+                self.score += 1
+                self.generate_berry()
     
-
+a = game(controls)
+a.game()
