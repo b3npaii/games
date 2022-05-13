@@ -13,8 +13,10 @@ class game:
         for row in self.board:
             if row[move] == 0:
                 return True
-    
 
+    def print_board(self):
+         for row in reversed(self.board):
+             print(row)
 
     def check_winner(self):
         if self.board == [[0 for _ in range(7)] for _ in range(6)]:
