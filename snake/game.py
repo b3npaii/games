@@ -34,9 +34,9 @@ class game:
     def check_collision(self):
         if len(list(set(self.snake))) != len(self.snake):
             return True
-        elif self.snake[-1][0] != range(0, 10):
+        elif self.snake[-1][0] not in range(0,10):
             return True
-        elif self.snake[-1][1] != range(0, 10):
+        elif self.snake[-1][1] not in range(0,10):
             return True
         return False
     
@@ -56,6 +56,7 @@ class game:
             for row in self.board:
                 print(row)
             move = self.make_move()
+            new_segment = None
             if move == 'w':
                 new_segment = (self.snake[-1][0] - 1, self.snake[-1][1])
             elif move == 's':
@@ -65,7 +66,8 @@ class game:
             elif move == 'd':
                 new_segment = (self.snake[-1][0], self.snake[-1][1] + 1)
             self.snake.append(new_segment)
-            if self.check_collision == True:
+            if self.check_collision() == True:
+                print(self.score - 3)
                 return self.score - 3
             self.snake = self.snake[-self.score:]
             if self.berry in self.snake:
