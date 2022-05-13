@@ -1,12 +1,5 @@
 import random as random
-
-def controls(board):
-    x = input()
-    while x not in ["w", "a", "s", "d"]:
-        print("can't do that")
-        x = input()
-    return x
-
+from strategies import controls
 class game:
     def __init__(self, strategy):
         self.strat = strategy
