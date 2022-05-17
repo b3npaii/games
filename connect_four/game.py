@@ -10,8 +10,8 @@ class game:
         self.next = 1
 
     def valid_move(self, move):
-        for row in self.board:
-            if row[move] == 0:
+        for row in range(0, 6):
+            if self.board[row][move] == 0:
                 return True
         return False
 
@@ -40,9 +40,9 @@ class game:
         return None
 
     def gravity(self, token, column):
-        for row in self.board:
-            if row[column] == 0:
-                self.board[self.board.index(row)][column] = token
+        for row in range(0, 6):
+            if self.board[row][column] == 0:
+                self.board[row][column] = token
                 break
 
     def make_move(self):
