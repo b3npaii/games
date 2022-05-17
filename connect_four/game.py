@@ -6,17 +6,14 @@ class game:
         self.players = [player1, player2]
         row = [0 for i in range(0, 7)]
         for i in range(0, 6):
-            self.board.append(board)
+            self.board.append(row)
         self.next = 1
     
-    def valid_moved(self, move):
+    def valid_move(self, move):
         for row in self.board:
             if row[move] == 0:
                 return True
-
-    def print_board(self):
-         for row in reversed(self.board):
-             print(row)
+        return False
 
     def check_winner(self):
         if self.board == [[0 for _ in range(7)] for _ in range(6)]:
@@ -42,3 +39,36 @@ class game:
         else:
             return 'Tie'
         return None
+    
+    def drop(self, player, column):
+        for row in range(0, 6):
+            if self.board[row][column] == 0:
+                self.board[row][column] = player
+                break
+    
+    def make_move(self):
+        current = self.players[self.next - 1]
+        move = current.choose_move(self.board)
+        if self.valid_move(move) == True:
+            self.drop(self.next, move)
+            self.previous = self.next
+        if self.log == True:
+            for row in reversed(self.board):
+                print(row)
+            print()
+        self.next = [2, 1][self.next - 1]
+
+    def run(self, log=False):
+        self.log = log
+        self.win = self.check_winner()
+        while self.win == None:
+            self.make_move()
+            self.win = self.check_winner()
+
+from strategy import RandomPlayer
+
+a = RandomPlayer()
+b = RandomPlayer()
+
+game = game(a, b)
+game.run(log=True)

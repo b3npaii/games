@@ -1,6 +1,8 @@
 import random
 
-def random_strat(board):
-    move = random.randrange(0, 7)
-    return move
-    
+
+class RandomPlayer:
+
+    def choose_move(self, board):
+        move = random.randrange(0, 7)
+        return move
