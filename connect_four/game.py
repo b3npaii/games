@@ -18,10 +18,9 @@ class game:
     def check_winner(self):
         if self.board == [[0 for _ in range(7)] for _ in range(6)]:
             return None
-        player_that_made_move = self.previous_player
+        player_that_made_move = self.previous
         for i in range(0, 6):
             for j in range(0, 4):
-                print(j)
                 if self.board[i][j] == self.board[i][j + 1] == self.board[i][j + 2] == self.board[i][j + 3] != 0:
                     return self.board[i][j]
         for i in range(0, 3):
@@ -40,17 +39,17 @@ class game:
             return 'Tie'
         return None
     
-    def drop(self, player, column):
-        for row in range(0, 6):
-            if self.board[row][column] == 0:
-                self.board[row][column] = player
+    def gravity(self, player, column):
+        for row in self.board:
+            if row[column] == 0:
+                self.board[self.board.index(row)][column] = player 
                 break
     
     def make_move(self):
         current = self.players[self.next - 1]
         move = current.choose_move(self.board)
         if self.valid_move(move) == True:
-            self.drop(self.next, move)
+            self.gravity(self.next, move)
             self.previous = self.next
         if self.log == True:
             for row in reversed(self.board):
@@ -72,3 +71,5 @@ b = RandomPlayer()
 
 game = game(a, b)
 game.run(log=True)
+print('winner: ', game.win)
+
