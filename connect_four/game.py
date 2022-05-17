@@ -8,7 +8,7 @@ class game:
         for i in range(0, 6):
             self.board.append(row)
         self.next = 1
-    
+
     def valid_move(self, move):
         for row in self.board:
             if row[move] == 0:
@@ -38,13 +38,13 @@ class game:
         else:
             return 'Tie'
         return None
-    
-    def gravity(self, player, column):
+
+    def gravity(self, token, column):
         for row in self.board:
             if row[column] == 0:
-                self.board[self.board.index(row)][column] = player 
+                self.board[self.board.index(row)][column] = token
                 break
-    
+
     def make_move(self):
         current = self.players[self.next - 1]
         move = current.choose_move(self.board)
