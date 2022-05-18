@@ -4,9 +4,7 @@ class game:
         self.player2 = player2
         self.board = []
         self.players = [player1, player2]
-        row = [0 for i in range(0, 7)]
-        for i in range(0, 6):
-            self.board.append(row)
+        self.board = [[0 for _ in range(7)] for _ in range(6)]
         self.next = 1
 
     def valid_move(self, move):
