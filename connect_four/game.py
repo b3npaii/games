@@ -62,12 +62,4 @@ class game:
             self.make_move()
             self.win = self.check_winner()
 
-from strategy import RandomPlayer
-
-a = RandomPlayer()
-b = RandomPlayer()
-
-game = game(a, b)
-game.run(log=True)
-print('winner: ', game.win)
 
