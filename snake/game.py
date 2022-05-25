@@ -1,6 +1,7 @@
 import random as random
 from strategies import controls
 from ben_strat import strat
+from ben_strat import strat2
 class game:
     def __init__(self, strategy):
         self.strat = strategy
@@ -37,7 +38,6 @@ class game:
     
     def make_move(self):
         self.moves += 1
-        print(self.moves)
         return self.strat(self.board)
     
 
@@ -51,6 +51,8 @@ class game:
             for part in self.snake[:-1]:
                 self.board[part[0]][part[1]] = "O"
             self.board[self.snake[-1][0]][self.snake[-1][1]] = "e"
+#            for row in self.board:
+#                print(row)
             move = self.make_move()
             new_segment = None
             if move == 'w':
@@ -65,19 +67,22 @@ class game:
             if self.check_collision() == True:
                 print(self.score - 3)
                 return self.score - 3
-            coutner = 0
-            for row in self.board:
-                if "." not in row:
-                    coutner += 1
-            if coutner == 10:
-                print(96)
-                print("you win")
-                print(self.moves)
+            if self.score == 99:
+                self.score = 97
                 return
             self.snake = self.snake[-self.score:]
             if self.berry in self.snake:
                 self.score += 1
                 self.generate_berry()
-    
-a = game(strat)
-a.game()
+
+totals = {'score': 0, 'moves': 0}
+for i in range(1000):
+    bruh = game(strat)
+    result = bruh.game()
+    totals['score'] += bruh.score
+    totals['moves'] += bruh.moves
+    if i % 100 == 0:
+        print(i)
+
+averages = {'score': totals['score'] / 1000, 'moves': totals['moves'] / 1000}
+print(averages)
