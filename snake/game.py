@@ -1,11 +1,14 @@
 import random as random
 from strategies import controls
-from ben_strat import strat
+from ben_strat import Ben
 from ben_strat import strat2
+from elias import elias
+from celeste import celeste
+
 class game:
-    def __init__(self, strategy):
-        self.strat = strategy
-        self.board = [["." for i in range(0, 10)] for j in range(0, 10)]
+    def __init__(self, player):
+        self.player = player
+        self.board = [[" " for i in range(0, 10)] for j in range(0, 10)]
         self.score = 3
         self.snake = [(4, 1), (4, 2), (4, 3)]
         self.berry = None
@@ -15,7 +18,7 @@ class game:
         possible_places = []
         for i in range(0, 10):
             for j in range(0, 10):
-                if self.board[i][j] == ".":
+                if self.board[i][j] == " ":
                     possible_places.append((i, j))
         self.berry = possible_places[random.randint(0, len(possible_places) - 1)]
     
@@ -38,7 +41,8 @@ class game:
     
     def make_move(self):
         self.moves += 1
-        return self.strat(self.board)
+        move = self.player.choose_move(self, self.board)
+        return move
     
 
     def game(self):
@@ -46,7 +50,7 @@ class game:
         while True:
             for i in range(0, 10):
                 for j in range(0, 10):
-                    self.board[i][j] = "."
+                    self.board[i][j] = " "
             self.board[self.berry[0]][self.berry[1]] = "b"
             for part in self.snake[:-1]:
                 self.board[part[0]][part[1]] = "O"
@@ -74,15 +78,14 @@ class game:
             if self.berry in self.snake:
                 self.score += 1
                 self.generate_berry()
-
 totals = {'score': 0, 'moves': 0}
-for i in range(1000):
-    bruh = game(strat)
+for i in range(100):
+    bruh = game(elias)
     result = bruh.game()
     totals['score'] += bruh.score
     totals['moves'] += bruh.moves
     if i % 100 == 0:
         print(i)
 
-averages = {'score': totals['score'] / 1000, 'moves': totals['moves'] / 1000}
+averages = {'score': totals['score'] / 100, 'moves': totals['moves'] / 100}
 print(averages)
