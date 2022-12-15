@@ -1,86 +1,165 @@
-class Queue:
-    def __init__(self, contents=None):
-        if contents is None:
-            self.contents = []
-        else:
-            self.contents = contents
-    def print(self):
-        for item in self.contents:
-            print(item)
-    def enqueue(self, item_to_queue):
-        self.contents.append(item_to_queue)
-    def dequeue(self):
-        return self.contents.pop(0)
-    
 
 class Node:
-    def __init__(self, board):
-        self.state = board
-        self.winner = self.check_win()
-        if self.winner == None:
-            self.turn = 1 if self.state.count(1) == self.state.count(2) else 2
-        else:
-            self.turn = None
+
+    def __init__(self, game_state): 
+        self.game_state = game_state
+        self.upcoming_player = self.upcoming_player()
+        self.winner = self.check_win_states()
+        self.parents = []
         self.children = []
-        self.parent = None
+        self.minimax_value = None
+    
+    def upcoming_player(self): 
+        upcoming_player = 2
+        if self.game_state.count(1) == self.game_state.count(2):
+            upcoming_player = 1
+        return upcoming_player 
+    
+    def print(self): 
+         print(f'{self.game_state[0]} {self.game_state[1]} {self.game_state[2]}\n{self.game_state[3]} {self.game_state[4]} {self.game_state[5]}\n{self.game_state[6]} {self.game_state[7]} {self.game_state[8]}')
 
-    def check_win(self):
-        for j in range(3):
-            i = 3 * j
-            if self.state[j] == self.state[j + 3] == self.state[j + 6] != 0:
-                return self.state[j]
-            elif self.state[i] == self.state[i + 1] == self.state[i + 2] != 0:
-                return self.state[i]
-
-        if self.state[0] == self.state[4] == self.state[8] != 0:
-            return self.state[4]
-        elif self.state[2] == self.state[4] == self.state[6] != 0:
-            return self.state[4]
-        elif 0 not in self.state:
+    def check_win_states(self):
+    
+        #rows
+        if self.game_state[0] == self.game_state[1] == self.game_state[2] != 0: 
+            return self.game_state[0]
+        elif self.game_state[3] == self.game_state[4] == self.game_state[5] != 0: 
+            return self.game_state[3]
+        elif self.game_state[6] == self.game_state[7] == self.game_state[8] != 0: 
+            return self.game_state[6]
+        #columns
+        elif self.game_state[0] == self.game_state[3] == self.game_state[6] != 0: 
+            return self.game_state[0]
+        elif self.game_state[1] == self.game_state[4] == self.game_state[7] != 0: 
+            return self.game_state[1]
+        elif self.game_state[2] == self.game_state[5] == self.game_state[8] != 0: 
+            return self.game_state[2]
+        #diagonals
+        elif self.game_state[0] == self.game_state[4] == self.game_state[8] != 0: 
+            return self.game_state[0]
+        elif self.game_state[2] == self.game_state[4] == self.game_state[6] != 0: 
+            return self.game_state[2]
+        #cats_cradle
+        elif 0 not in self.game_state: 
             return 'Tie'
+        
         return None
     
-    def legal_moves(self):
-        legal = []
-        for i in range(0, 9):
-            if self.state[i] == 0:
-                legal.append(i)
-        return legal
-
-
-
-class RecombiningTree:
-    def __init__(self):
-        self.generate_tree()
+    def remaining_moves(self): 
     
-    def generate_tree(self):
-        first = Node([0 for i in range(0, 9)])
-        queue = Queue([first])
-        self.root = first
-        seen = {tuple(first.state): first}
+        avaliable_moves = []
+        for i in range(9):
+            if self.game_state[i] == 0:
+                avaliable_moves.append(i)
+        return avaliable_moves
 
-        while queue.contents != []:
-            dequeued = queue.dequeue()
-            if dequeued.winner != None:
-                continue
+    def assign_minimax_values(self): 
+        if self.children == []:
+            if self.winner == 1: 
+                self.minimax_value = 1
+            elif self.winner == 2: 
+                self.minimax_value = -1 
+            elif self.winner == 'Tie': 
+                self.minimax_value = 0
+        
+        else: 
+            children_minimax_values = []
+            for children in self.children:
 
-            board = dequeued.state
-            next_player = dequeued.turn
-            moves = dequeued.legal_moves()
-            for move in moves:
-                new_board = list(board)
-                new_board[move] = next_player
+                value = self.assign_minimax_values(children)
+                children_minimax_values.append(value)
 
-                if tuple(new_board) in seen:
-                    new_node = seen[tuple(board)]
-                    dequeued.children.append(new_node)
-                else:
-                    new_node = Node(new_board)
-                    new_node.parent = dequeued
-                    dequeued.children.append(new_node)
+            if self.upcoming_player == 1: 
+                    self.minimax_value = max(children_minimax_values)
+            else: 
+                self.minimax_value = min(children_minimax_values)
+class Queue:
+    def __init__(self):
+        self.items = [] 
+
+    def print(self):
+        print(self.items)
+
+    def enqueue(self, item):
+        self.items.append(item)
+
+    def dequeue(self):
+        self.items.pop(0)
+
+
+class TicTacToeRecombiningTree: 
+    def __init__(self): 
+        self.generate_tree()
+        self.assign_minimax_values(self.root)
+    
+    def generate_tree(self): 
+        self.nodes = {}
+        empty_board = Node([0 for i in range(9)])
+        self.root = empty_board
+        self.nodes[tuple(empty_board.game_state)] = empty_board
+
+        queue = Queue()
+        queue.enqueue(empty_board)
+    
+        while len(queue.items) != 0:
+
+            current_node = queue.items[0]
+
+            if current_node.winner == None: 
+                avaliable_moves = current_node.remaining_moves()
+                current_board = current_node.game_state
+
+                for move in avaliable_moves: 
+                    new_move_board = current_board.copy()
+                    new_move_board[move] = current_node.upcoming_player
+                    #new_node = Node(new_move_board)
+                    
+                    if tuple(new_move_board) in self.nodes:
+                        new_node = self.nodes[tuple(new_move_board)]
+                        current_node.children.append(new_node)
+                        new_node.parents.append(current_node)
+                        continue
+                    
+                    new_node = Node(new_move_board)
+                    new_node.parents.append(current_node)
+                    current_node.children.append(new_node)
                     queue.enqueue(new_node)
-                    seen[tuple(new_node.state)] = new_node
-        print(len(seen))
+                    self.nodes[tuple(new_node.game_state)] = new_node
+                    
+            queue.dequeue() 
+        self.num_nodes = len(self.nodes)
+    
+    def assign_minimax_values(self, node):
+        
+        if node.children == []: 
+            if node.winner == 1:
+                node.minimax_value = 1
+            elif node.winner == 2:
+                node.minimax_value = -1
+            elif node.winner == 'Tie':
+                node.minimax_value = 0
+        
+        else:
+            children_minimax_values = []
+            #print("a" + str(len(node.children)))
+
+            for child in node.children:
+                self.assign_minimax_values(child)
+                children_minimax_values.append(child.minimax_value)
+
+            if node.upcoming_player == 1:
+                node.minimax_value = max(children_minimax_values)
+            else:
+                node.minimax_value = min(children_minimax_values)
+        
+        return node.minimax_value
 
 
-a = RecombiningTree()
+
+        
+        
+            
+
+        
+
+tree = TicTacToeRecombiningTree()

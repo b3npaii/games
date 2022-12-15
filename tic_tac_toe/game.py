@@ -1,7 +1,9 @@
 class Game:
     def __init__(self, player1, player2):
         self.player1 = player1
+        self.player1.player = 1
         self.player2 = player2
+        self.player1.player = 2
         self.board = []
         self.players = [player1, player2]
         for i in range(0, 9):
