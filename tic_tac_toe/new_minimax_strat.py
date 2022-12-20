@@ -7,7 +7,7 @@ class MiniMaxStrat:
     
     def choose_move(self, board):
         current_board = tuple(board)
-        current_board_node = self.tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as a dictionary and dictionaries can't have lists as keys
+        current_board_node = self.tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as dictionary keys and dictionaries can't have lists as keys
 
         minimax_values_of_children = {}
         for child in current_board_node.children:
