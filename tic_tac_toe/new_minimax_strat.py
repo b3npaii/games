@@ -43,6 +43,6 @@ class ManualPlayer:
 
 
 
-game = Game(MiniMaxStrat(), MiniMaxStrat())
+game = Game(MiniMaxStrat(), ManualPlayer())
 game.run(log=True)
 print(game.check_win())

@@ -50,12 +50,6 @@ class Node:
                 legal.append(i)
         return legal
 
-    def find_possible(self):
-        possible = []
-        for i in range(0, 9):
-            if self.state[i] == 0:
-                possible.append(i)
-        return possible
 
 
 

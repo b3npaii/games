@@ -62,4 +62,3 @@ class game:
             self.make_move()
             self.win = self.check_winner()
 
-
