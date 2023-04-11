@@ -1,3 +1,5 @@
+import math
+
 class Node:
 
     def __init__(self, game_state):
@@ -7,6 +9,7 @@ class Node:
         self.parents = []
         self.children = []
         self.minimax_value = None
+        self.depth = 0
     
     def next_player(self):
         next_player = 2
@@ -53,27 +56,41 @@ class Node:
         return avaliable_moves
 
     def assign_minimax_values(self):
-        if self.children == []:
-            if self.winner == 1:
-                self.minimax_value = 1
-            elif self.winner == 2: 
-                self.minimax_value = -1
-            elif self.winner == 'Tie':
-                self.minimax_value = 0
-                #checks to see if it's a terminal node and gives it the corresponding minimax value if it is terminal
+        board = self.game_state
+        total = 0
+        for i in [0, 3, 6]:  # rows
+            if board[i] == board[i + 1] != 0 and board[i + 2] == 0:
+                total += {1: 1, 2: -1}[board[i]]  # add 1 if its player 1, subtract 1 if its player 2
+            if board[i + 1] == board[i + 2] != 0 and board[i] == 0:
+                total += {1: 1, 2: -1}[board[i + 1]]  # see above comment
+            if board[i] == board[i + 2] != 0 and board[i + 1] == 0:
+                total += {1: 1, 2: -1}[board[i]]  # see above comment
+        for i in [0, 1, 2]:  # cols
+            if board[i] == board[i + 3] != 0 and board[i + 6] == 0:
+                total += {1: 1, 2: -1}[board[i]]  # see above above comment
+            if board[i + 3] == board[i + 6] != 0 and board[i] == 0:
+                total += {1: 1, 2: -1}[board[i + 3]]  # see above comment
+            if board[i] == board[i + 6] != 0 and board[i + 3] == 0:
+                total += {1: 1, 2: -1}[board[i]]  # see above comment
 
-        else: 
-            children_minimax_values = []
-            for children in self.children:
+        # diagonal
+        if board[0] == board[4] != 0 and board[8] == 0:
+            total += {1: 1, 2: -1}[board[0]]  # see above above comment
+        if board[4] == board[8] != 0 and board[0] == 0:
+            total += {1: 1, 2: -1}[board[4]]  # see above comment
+        if board[0] == board[8] != 0 and board[4] == 0:
+            total += {1: 1, 2: -1}[board[0]]  # see above comment
 
-                value = self.assign_minimax_values(children)
-                children_minimax_values.append(value)
+        # anti-diagonal
+        if board[2] == board[4] != 0 and board[6] == 0:
+            total += {1: 1, 2: -1}[board[2]]  # see above comment
+        if board[2] == board[6] != 0 and board[4] == 0:
+            total += {1: 1, 2: -1}[board[2]]  # see above comment
+        if board[4] == board[8] != 0 and board[0] == 0:
+            total += {1: 1, 2: -1}[board[4]] # see above comment
 
-            if self.next_player == 1: 
-                    self.minimax_value = max(children_minimax_values)
-            else: 
-                self.minimax_value = min(children_minimax_values)
-                #finds the minimax values of the children and gives it the minimum/maximum minimax value to the parent node according to what player
+        total /= 8
+        return total
 
 class Queue:
     def __init__(self):
@@ -89,23 +106,25 @@ class Queue:
         self.items.pop(0)
 
 
-class TicTacToeRecombiningTree:
-    def __init__(self):
+class HeuristicTree:
+    def __init__(self, ply, root):
+        self.ply = ply
+        self.root = Node(root)
         self.generate_tree()
         self.assign_minimax_values(self.root)
 
     def generate_tree(self):
         self.nodes = {}
-        empty_board = Node([0 for i in range(9)])
-        self.root = empty_board
-        self.nodes[tuple(empty_board.game_state)] = empty_board
+        self.nodes[tuple(self.root.game_state)] = self.root
 
         queue = Queue()
-        queue.enqueue(empty_board)
-
+        queue.enqueue(self.root)
         while len(queue.items) != 0:
 
             current_node = queue.items[0]
+            queue.dequeue()
+            if current_node.depth > self.ply:
+                continue
 
             if current_node.winner == None:
                 avaliable_moves = current_node.remaining_moves()
@@ -120,15 +139,16 @@ class TicTacToeRecombiningTree:
                         new_node = self.nodes[tuple(new_move_board)]
                         current_node.children.append(new_node)
                         new_node.parents.append(current_node)
+                        new_node.depth = current_node.depth + 1
                         continue
 
                     new_node = Node(new_move_board)
+                    new_node.depth = current_node.depth + 1
                     new_node.parents.append(current_node)
                     current_node.children.append(new_node)
                     queue.enqueue(new_node)
                     self.nodes[tuple(new_node.game_state)] = new_node
 
-            queue.dequeue()
         self.num_nodes = len(self.nodes)
 
     def assign_minimax_values(self, node):
@@ -155,4 +175,5 @@ class TicTacToeRecombiningTree:
 
         return node.minimax_value
 
-a = TicTacToeRecombiningTree()
+a = HeuristicTree(2, [0, 0, 0, 0, 0, 0, 0, 0, 0])
+print(len(a.nodes))
