@@ -175,5 +175,5 @@ class HeuristicTree:
 
         return node.minimax_value
 
-a = HeuristicTree(2, [0, 0, 0, 0, 0, 0, 0, 0, 0])
-print(len(a.nodes))
+# a = HeuristicTree(2, [0, 0, 0, 0, 0, 0, 0, 0, 0])
+# print(len(a.nodes))

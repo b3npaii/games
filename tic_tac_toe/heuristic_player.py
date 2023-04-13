@@ -1,17 +1,16 @@
 import random
 from game import *
-from heuristic_tree import *
 from new_minimax_strat import *
 from heuristic_tree_two import *
 
 class HeuristicPlayer:
     def __init__(self, ply):
         self.ply = ply
-    
+
     def choose_move(self, board):
-        self.tree = HeuristicTree(self.ply, board)
+        tree = HeuristicTree(self.ply, board)
         current_board = tuple(board)
-        current_board_node = self.tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as dictionary keys and dictionaries can't have lists as keys
+        current_board_node = tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as dictionary keys and dictionaries can't have lists as keys
 
         minimax_values_of_children = {}
         for child in current_board_node.children:

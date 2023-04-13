@@ -1,4 +1,5 @@
 import random
+
 class player:
     def __init__(self, strategy):
         self.strategy = strategy
@@ -8,8 +9,8 @@ class player:
 
 def random_strat(board):
     moves = []
-    for i in range(0, len(board[0])):
+    for i in range(0, len(board[5])):
         if board[0][i] == 0:
             moves.append(i)
-    move = randint(0, len(moves) - 1)
+    move = random.randint(0, len(moves) - 1)
     return move
