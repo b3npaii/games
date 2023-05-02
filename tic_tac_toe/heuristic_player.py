@@ -6,11 +6,18 @@ from heuristic_tree_two import *
 class HeuristicPlayer:
     def __init__(self, ply):
         self.ply = ply
+        if ply == 9:
+            self.tree = HeuristicTree(ply, [0, 0, 0, 0, 0, 0, 0, 0, 0])
 
     def choose_move(self, board):
-        tree = HeuristicTree(self.ply, board)
+        if self.ply < 9:
+            tree = HeuristicTree(self.ply, board)
         current_board = tuple(board)
-        current_board_node = tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as dictionary keys and dictionaries can't have lists as keys
+        if self.ply == 9:
+            current_board_node = self.tree.nodes[current_board]#nodes are stored as tuples in the tree because they're stored as dictionary keys and dictionaries can't have lists as keys
+        if self.ply < 9:
+            current_board_node = tree.nodes[current_board]
+        print(current_board_node.winner)
 
         minimax_values_of_children = {}
         for child in current_board_node.children:
@@ -20,6 +27,7 @@ class HeuristicPlayer:
         if current_board_node.next_player == 1:
             board_with_best_move = None
             values_list = list(minimax_values_of_children.values())#all the minimax values of the children
+            print(values_list)
             key_list = list(minimax_values_of_children.keys())#the children boards
             max_value = max(values_list)#max minimax value
             index = values_list.index(max_value)#get the index of the maximum minimax value
@@ -54,9 +62,14 @@ class RandomPlayer:
         return random.choice(moves)
 
 
-a = HeuristicPlayer(3)
+a = HeuristicPlayer(2)
 b = MiniMaxStrat()
+c = HeuristicPlayer(9)
 d = RandomPlayer()
-game = Game(b, a)
-game.run(log=True)
-print(game.check_win())
+e = ManualPlayer()
+outcomes = {'Tie': 0, 1: 0, 2: 0}
+for i in range(100):
+    game = Game(d, a)
+    game.run(log=True)
+    outcomes[game.win] += 1
+print(outcomes)

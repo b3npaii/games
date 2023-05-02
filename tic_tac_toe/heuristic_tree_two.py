@@ -22,28 +22,27 @@ class Node:
 
     def check_win_states(self):
 
-        #rows
         if self.game_state[0] == self.game_state[1] == self.game_state[2] != 0:
             return self.game_state[0]
         elif self.game_state[3] == self.game_state[4] == self.game_state[5] != 0:
             return self.game_state[3]
         elif self.game_state[6] == self.game_state[7] == self.game_state[8] != 0:
             return self.game_state[6]
-        #columns
+
         elif self.game_state[0] == self.game_state[3] == self.game_state[6] != 0:
             return self.game_state[0]
         elif self.game_state[1] == self.game_state[4] == self.game_state[7] != 0:
             return self.game_state[1]
         elif self.game_state[2] == self.game_state[5] == self.game_state[8] != 0:
             return self.game_state[2]
-        #diagonals
+
         elif self.game_state[0] == self.game_state[4] == self.game_state[8] != 0:
             return self.game_state[0]
         elif self.game_state[2] == self.game_state[4] == self.game_state[6] != 0:
             return self.game_state[2]
-        #cats_cradle
+
         elif 0 not in self.game_state:
-            return 'Tie'
+            return "Tie"
 
         return None
 
@@ -58,6 +57,15 @@ class Node:
     def assign_minimax_values(self):
         board = self.game_state
         total = 0
+        if self.winner != None:
+            if self.winner == "Tie":
+                return 0
+            elif self.winner == 2:
+                return -1
+            else:
+                return self.winner
+                
+
         for i in [0, 3, 6]:  # rows
             if board[i] == board[i + 1] != 0 and board[i + 2] == 0:
                 total += {1: 1, 2: -1}[board[i]]  # add 1 if its player 1, subtract 1 if its player 2
@@ -154,12 +162,7 @@ class HeuristicTree:
     def assign_minimax_values(self, node):
 
         if node.children == []:
-            if node.winner == 1:
-                node.minimax_value = 1
-            elif node.winner == 2:
-                node.minimax_value = -1
-            elif node.winner == 'Tie':
-                node.minimax_value = 0
+            node.minimax_value = node.assign_minimax_values()
 
         else:
             children_minimax_values = []
@@ -175,5 +178,5 @@ class HeuristicTree:
 
         return node.minimax_value
 
-# a = HeuristicTree(2, [0, 0, 0, 0, 0, 0, 0, 0, 0])
+# a = HeuristicTree(8, [1, 0, 0, 0, 0, 0, 0, 0, 0])
 # print(len(a.nodes))
