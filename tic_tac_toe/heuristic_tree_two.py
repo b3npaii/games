@@ -64,7 +64,6 @@ class Node:
                 return -1
             else:
                 return self.winner
-                
 
         for i in [0, 3, 6]:  # rows
             if board[i] == board[i + 1] != 0 and board[i + 2] == 0:
