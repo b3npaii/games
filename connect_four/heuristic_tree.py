@@ -32,10 +32,23 @@ class Node:
     def __init__(self, board, turn, ply):
         self.state = board
         self.winner = self.check_winner()
-        self.turn = turn
+        self.turn = self.next()
         self.children = []
         self.parent = None
         self.ply = ply
+        self.minimax_value = self.assign_minimax_values()
+        self.next_player = self.next()
+    
+    def next(self):
+        board = self.state
+        total = 0
+        for row in board:
+            for space in row:
+                total += space
+        if total % 3 == 1:
+            return 2
+        elif total % 3 == 0:
+            return 1
 
     def check_winner(self):
         if self.state == [[0 for _ in range(7)] for _ in range(6)]:
@@ -78,49 +91,75 @@ class Node:
             if self.winner == "Tie":
                 return 0
             elif self.winner == 2:
-                return -1
+                return -100000
             else:
-                return self.winner
+                return 100000
 
         for i in range(0, 4):
             for j in range(0, 5):
                 if board[j][i] == board[j][i + 1] == board[j][i + 2] != 0 and board[j][i + 3] == 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[j][i]]
 
                 elif board[j][i] == 0 and board[j][i + 1] == board[j][i + 2] == board[j][i + 3] != 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[j][i + 1]]
 
                 elif board[j][i] == board[j][i + 2] == board[j][i + 3] != 0 and board[j][i + 1] == 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[j][i]]
 
                 elif board[j][i] == board[j][i + 1] == board[j][i + 3]!= 0 and board[j][i + 2] == 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[j][i]]
+
 
         for i in range(0, 3):
             for j in range(0, 6):
                 if board[i][j] == board[i + 1][j] == board[i + 2][j] != 0 and board[i + 3][j] == 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[i][j]]
 
                 elif board[i][j] == 0 and board[i + 1][j] == board[i + 2][j] == board[i + 3][j] != 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[i + 1][j]]
 
                 elif board[i + 1][j] == 0 and board[i][j] == board[i + 2][j] == board[i + 3][j] != 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[i][j]]
 
                 elif board[i + 2][j] == 0 and board[i][j] == board[i + 1][j] == board[i + 3][j] != 0:
-                    total += 1
+                    total += {1: 1, 2: -1}[board[i][j]]
         
         for i in range(0, 3):
-            for j in range(0, 2):
-                continue
+            for j in range(0, 4):
+                if board[i][j] == board[i + 1][j + 1] == board[i + 2][j + 2] != 0 and board[i + 3][j + 3] == board[i + 2][j + 3] == 0:
+                    total += {1: 1, 2: -1}[board[i][j]]
+
+                elif board[i][j] == board[i - 1][j] == 0 and board[i + 1][j + 1] == board[i + 2][j + 2] == board[i + 3][j + 3] != 0:
+                    total += {1: 1, 2: -1}[board[i + 1][j + 1]]
+
+                elif board[i][j] == board[i + 3][j + 3] == board[i + 2][j + 2] != 0 and board[i + 1][j + 1] == board[i][j + 1] == 0:
+                    total += {1: 1, 2: -1}[board[i][j]]
+
+                elif board[i][j] == board[i + 1][j + 1] == board[i + 3][j + 3] != 0 and board[i + 2][j + 2] == board[i + 1][j + 2] == 0:
+                    total += {1: 1, 2: -1}[board[i][j]]
+
+        for i in range(0, 3):
+            for j in [6, 5, 4, 3]:
+                if board[i][j] == board[i + 1][j - 1] == board[i + 2][j - 2] != 0 and board[i + 3][j - 3] == board[i + 2][j - 3] == 0:
+                    total += {1: 1, 2: -1}[board[i][j]]
+                
+                elif board[i][j] == board[i + 1][j - 1] == board[i + 3][j - 3] != 0 and board[i + 2][j - 2] == board[i + 1][j - 2] == 0:
+                    total += {1: 1, 2: -1}[board[i + 1][j - 1]]
+
+                elif board[i][j] == board[i + 3][j - 3] == board[i + 2][j - 2] != 0 and board[i + 1][j - 1] == board[i][j - 1] == 0:
+                    total += {1: 1, 2: -1}[board[i][j]]
+
+                elif board[i + 3][j - 3] == board[i + 1][j - 1] == board[i + 2][j - 2] != 0 and board[i][j] == board[i - 1][j] == 0:
+                    total += {1: 1, 2: -1}[board[i + 3][j - 3]]
 
         return total
 
 class ConnectFourTree:
-    def __init__(self, ply):
+    def __init__(self, ply, board):
         self.cycles = 1
         self.ply = ply
-        self.tree = self.generate_tree()
+        self.tree = self.generate_tree(board)
+        self.assign_minimax_values(Node(board, 1, 1))
 
     def make_move(self, board, column):
         for row in range(0, 6):
@@ -152,13 +191,14 @@ class ConnectFourTree:
         elif total % 3 == 0:
             return 1
 
-    def generate_tree(self):
-        first = Node([[0 for _ in range(7)] for _ in range(6)], 1, 1)
+    def generate_tree(self, board):
+        first = Node(board, 1, 1)
         turns = [1, 2]
         queue = Queue([first])
         self.root = first
         self.next = 1
-        self.nodes = [first]
+
+        self.nodes = {tuple([tuple(row) for row in board]): first}
 
         while queue.contents != []:
             dequeued = queue.dequeue()
@@ -175,17 +215,18 @@ class ConnectFourTree:
             for move in moves:
                 copied_board = self.copy_board(board)
                 new_board = self.make_move(copied_board, move)
+                tupled_board = tuple([tuple(row) for row in new_board])
 
 
                 new_node = Node(new_board, self.next, dequeued.ply + 1)
-                self.print_board(new_node.state)
-                print(new_node.assign_minimax_values())
-                print()
+                # self.print_board(new_node.state)
+                # print(new_node.assign_minimax_values())
+                # print()
                 new_node.parent = dequeued
                 dequeued.children.append(new_node)
 
                 list_of_nodes.append(new_node)
-                self.nodes.append(new_node)
+                self.nodes[tupled_board] = new_node
 
 
             for node in list_of_nodes:
@@ -193,8 +234,27 @@ class ConnectFourTree:
 
             self.next = [2, 1][self.next - 1]
             self.cycles += 1
+    
+    def assign_minimax_values(self, node):
+
+        if node.children == []:
+            node.minimax_value = node.assign_minimax_values()
+
+        else:
+            children_minimax_values = []
+
+            for child in node.children:
+                self.assign_minimax_values(child)
+                children_minimax_values.append(child.minimax_value)
+
+            if node.next_player == 1:
+                node.minimax_value = max(children_minimax_values)
+            else:
+                node.minimax_value = min(children_minimax_values)
+
+        return node.minimax_value
 #it's not making new nodes right now, just editing the same one a bunch of times
 
 
 
-tree = ConnectFourTree(5)
+# tree = ConnectFourTree(6)
