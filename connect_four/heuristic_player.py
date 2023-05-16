@@ -139,4 +139,3 @@ for i in range(0, 10):
     outcomes[player_order[Test.win]] += 1
 print(outcomes)
 
-#10 - 0 when going first
