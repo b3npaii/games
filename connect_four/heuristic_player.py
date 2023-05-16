@@ -55,7 +55,7 @@ class RandomPlayer:
                 if board[row][col] == 0:
                     if col not in legal:
                         legal.append(col)
-        
+
         return random.choice(legal)
         
 class last_minute:
@@ -77,7 +77,7 @@ class last_minute:
 
     def check_win_or_block_states(self, board): 
         is_move_posible = False
-        
+
         for horizontal in self.rows: 
             for i in range(4): 
                 #2220
@@ -86,27 +86,23 @@ class last_minute:
                     move = 3 + i 
                     return move
 
-                #0222
                 elif horizontal[0 + i] == 0 and horizontal[1 + i] == horizontal[2 + i] == horizontal[3 + i] != 0: 
                     is_move_posible = True
                     move = 0 + i 
                     return move
-                #2202
+
                 elif horizontal[0 + i] == horizontal[1 + i] == horizontal[3 + i] != 0 and  horizontal[2 + i] == 0: 
                     is_move_posible = True
                     move = 2 + i 
                     return move
-                
-                #2022
+
                 elif horizontal[0 + i] == horizontal[2 + i] == horizontal[3 + i] != 0 and  horizontal[1 + i] == 0: 
                     is_move_posible = True
                     move = 1 + i 
                     return move
 
-        
         for vertical in self.columns: 
             for i in range(3): 
-                #0222
                 if vertical[0 + i] == 0 and vertical[1 + i] == vertical[2 + i] == vertical[3 + i] != 0: 
                     is_move_posible = True
                     move = self.columns.index(vertical)
